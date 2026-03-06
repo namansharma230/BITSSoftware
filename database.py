@@ -3,8 +3,8 @@ import json
 import os
 from datetime import date, datetime
 
-# Use SQLite instead of PostgreSQL
-DB_URL = "sqlite:///./reports.db"
+# Use Supabase PostgreSQL
+DB_URL = "postgresql://postgres.dyhuotgpgrjoklkpxmhd:namanbase123@aws-1-ap-south-1.pooler.supabase.com:6543/postgres"
 import logging
 logging.basicConfig(level=logging.DEBUG)
 engine = create_engine(DB_URL)
