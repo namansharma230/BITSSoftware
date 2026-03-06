@@ -1,15 +1,7 @@
-// Fetch reports from API with sentiment analysis
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:8000'
-  : 'https://bits-ufm-backend.onrender.com'; // Change this if you deploy under a different Render name
-
+// Fetch reports from Supabase with client-side sentiment analysis
 async function fetchReports() {
   try {
-    const response = await fetch(`${API_BASE_URL}/reports-with-sentiment`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch reports');
-    }
-    return await response.json();
+    return await window.SupabaseClient.fetchAllReports();
   } catch (error) {
     console.error('Error fetching reports:', error);
     // Use mock API if available, otherwise fallback to built-in sample
@@ -493,16 +485,38 @@ async function runSmokeTest() {
   };
   try {
     if (btn) btn.disabled = true;
-    setStatus('Checking /healthz ...');
-    const h = await fetch(`${API_BASE_URL}/healthz`);
-    if (!h.ok) throw new Error('Healthz failed: ' + h.status);
-    const hjson = await h.json();
-    if (hjson.status !== 'ok') throw new Error('Healthz not ok');
+    setStatus('Connecting to Supabase ...');
+
+    // Quick connectivity check
+    const { data: testData, error: testErr } = await window.SupabaseClient.supabase
+      .from('reports')
+      .select('id')
+      .limit(1);
+    if (testErr) throw new Error('Supabase connection failed: ' + testErr.message);
 
     setStatus('Seeding sample report ...');
-    const s = await fetch(`${API_BASE_URL}/seed-sample`);
-    if (!s.ok) throw new Error('Seed failed: ' + s.status);
-    await s.json().catch(() => { });
+    const sampleReport = {
+      id: String(Date.now()),
+      exam_date: '2024-11-01',
+      exam_city: 'Test City',
+      student_name: 'Alice',
+      bits_id: 'B1234',
+      course_code: 'CS101',
+      course_name: 'Intro',
+      semester: '1',
+      room_no: 'R1',
+      answer_booklet_serial: 'ABC123',
+      unfair_means: JSON.stringify(['talking']),
+      evidence_collected: true,
+      incident_details: 'Student was caught talking; severe cheating attempt',
+      incident_datetime: '2024-11-01T10:00:00',
+      observer_name: 'Bob',
+      observer_mobile: '1234567890',
+      invigilator_name: 'Eve',
+      invigilator_mobile: '0987654321',
+      report_date: '2024-11-01'
+    };
+    await window.SupabaseClient.insertReport(sampleReport);
 
     setStatus('Fetching reports with sentiment ...');
     const raw = await fetchReports();
@@ -510,10 +524,7 @@ async function runSmokeTest() {
     updateStats(reports);
     updateReportsTable(reports);
     updateAllReportsTable(reports);
-    updateUnfairMeansPieChart(reports);
-    updateCityChart(reports);
-    updateSemesterChart(reports);
-    updateEvidenceChart(reports);
+    updateAnalyticsCharts(reports);
 
     setStatus(`Smoke test passed. Reports fetched: ${reports.length}`, '#27ae60');
   } catch (err) {

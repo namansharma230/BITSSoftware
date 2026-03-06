@@ -12,7 +12,7 @@ document.getElementById('reportForm').addEventListener('submit', async function 
   console.log("evidence_collected:", data.evidence_collected, "type:", typeof data.evidence_collected);
 
   // Generate unique ID
-  data.id = Date.now();
+  data.id = String(Date.now());
 
   // Convert date fields
   if (data.exam_date) {
@@ -29,29 +29,11 @@ document.getElementById('reportForm').addEventListener('submit', async function 
   console.log("Payload:", JSON.stringify(data));
 
   try {
-    // Use dynamic API URL based on environment
-    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:8000'
-      : 'https://bits-ufm-backend.onrender.com';
-
-    const response = await fetch(`${API_BASE_URL}/submit-report`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
-
-    if (response.ok) {
-      alert("Report submitted successfully!");
-      this.reset();
-    } else {
-      const error = await response.json();
-      console.error("Server error:", error);
-      alert(`Failed to submit report: ${error.detail || 'Unknown error'}`);
-    }
+    await window.SupabaseClient.insertReport(data);
+    alert("Report submitted successfully!");
+    this.reset();
   } catch (error) {
-    console.error("Network error:", error);
-    alert("Network error: " + error.message);
+    console.error("Supabase error:", error);
+    alert("Failed to submit report: " + (error.message || 'Unknown error'));
   }
 });
