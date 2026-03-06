@@ -1,7 +1,11 @@
 // Fetch reports from API with sentiment analysis
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8000'
+  : 'https://bits-ufm-backend.onrender.com'; // Change this if you deploy under a different Render name
+
 async function fetchReports() {
   try {
-    const response = await fetch('/reports-with-sentiment');
+    const response = await fetch(`${API_BASE_URL}/reports-with-sentiment`);
     if (!response.ok) {
       throw new Error('Failed to fetch reports');
     }
@@ -490,13 +494,13 @@ async function runSmokeTest() {
   try {
     if (btn) btn.disabled = true;
     setStatus('Checking /healthz ...');
-    const h = await fetch('/healthz');
+    const h = await fetch(`${API_BASE_URL}/healthz`);
     if (!h.ok) throw new Error('Healthz failed: ' + h.status);
     const hjson = await h.json();
     if (hjson.status !== 'ok') throw new Error('Healthz not ok');
 
     setStatus('Seeding sample report ...');
-    const s = await fetch('/seed-sample');
+    const s = await fetch(`${API_BASE_URL}/seed-sample`);
     if (!s.ok) throw new Error('Seed failed: ' + s.status);
     await s.json().catch(() => { });
 

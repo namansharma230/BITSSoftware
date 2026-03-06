@@ -1,4 +1,4 @@
-document.getElementById('reportForm').addEventListener('submit', async function(event) {
+document.getElementById('reportForm').addEventListener('submit', async function (event) {
   event.preventDefault();
 
   const formData = new FormData(this);
@@ -29,7 +29,12 @@ document.getElementById('reportForm').addEventListener('submit', async function(
   console.log("Payload:", JSON.stringify(data));
 
   try {
-    const response = await fetch("/submit-report", {
+    // Use dynamic API URL based on environment
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:8000'
+      : 'https://bits-ufm-backend.onrender.com';
+
+    const response = await fetch(`${API_BASE_URL}/submit-report`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
