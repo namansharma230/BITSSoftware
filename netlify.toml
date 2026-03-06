@@ -1,0 +1,8 @@
+[build]
+  publish = "Frontend"
+
+# Handle client-side routing — serve Index.html for all unknown paths
+[[redirects]]
+  from = "/*"
+  to = "/Index.html"
+  status = 200
