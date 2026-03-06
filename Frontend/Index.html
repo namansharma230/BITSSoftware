@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unfair Means Incident Report</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="dashboard-container">
+
+    <!-- Header (matches dashboard) -->
+    <div class="dashboard-header">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="hamburger-btn" class="hamburger-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div>
+          <h1 class="gradient-text"><i class="fas fa-file-signature"></i> Unfair Means Report</h1>
+          <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #94a3b8;">BITS Pilani Examination Surveillance</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Drawer (matches dashboard) -->
+    <div id="side-drawer" class="side-drawer">
+      <div class="drawer-header">
+        <button id="close-drawer-btn" class="close-btn"><i class="fas fa-times"></i></button>
+        <div class="drawer-user">
+          <i class="fas fa-user-circle fa-2x"></i>
+          <span>Observer</span>
+        </div>
+      </div>
+      <div class="drawer-content">
+        <a href="dashboard.html" class="drawer-item" style="text-decoration:none;">
+          <i class="fas fa-chart-line"></i> Go to Dashboard
+        </a>
+      </div>
+    </div>
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+
+    <!-- Content -->
+    <div class="container dashboard-content">
+
+      <!-- Tab Nav (matches dashboard) -->
+      <div class="tab-header">
+        <div class="tab-nav">
+          <a href="dashboard.html" class="tab-btn" style="text-decoration:none;">
+            <i class="fas fa-home"></i> Overview
+          </a>
+          <a href="dashboard.html#reports" class="tab-btn" style="text-decoration:none;">
+            <i class="fas fa-list"></i> Reports
+          </a>
+          <a href="dashboard.html#analytics" class="tab-btn" style="text-decoration:none;">
+            <i class="fas fa-brain"></i> Analytics
+          </a>
+        </div>
+        <span class="tab-btn new-report-btn" style="pointer-events:none;">
+          <i class="fas fa-plus"></i> New Report
+        </span>
+      </div>
+
+      <!-- Form Card -->
+      <div class="glass-card" style="padding: 32px;">
+        <h3 class="card-title" style="margin-bottom: 28px; font-size: 1.2rem;">
+          <i class="fas fa-pen-nib"></i> Incident Details
+        </h3>
+
+        <form id="reportForm">
+
+          <!-- Exam Details -->
+          <div class="form-grid">
+            <div class="form-group">
+              <label><i class="far fa-calendar-alt"></i> Exam Date</label>
+              <input type="date" name="exam_date" required />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-map-marker-alt"></i> Exam City</label>
+              <input type="text" name="exam_city" placeholder="e.g. Hyderabad" required />
+            </div>
+
+            <!-- Student Info -->
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Student Name</label>
+              <input type="text" name="student_name" placeholder="Full Name" required />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-id-card"></i> BITS ID</label>
+              <input type="text" name="bits_id" placeholder="202XPSXXXXP" required />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-book"></i> Course Code</label>
+              <input type="text" name="course_code" placeholder="CS FXXX" required />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-bookmark"></i> Course Name</label>
+              <input type="text" name="course_name" placeholder="Course Title" />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-layer-group"></i> Semester</label>
+              <input type="number" name="semester" min="1" max="10" placeholder="1" />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-door-open"></i> Room No.</label>
+              <input type="text" name="room_no" placeholder="e.g. 101" />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-receipt"></i> Answer Booklet Serial No.</label>
+              <input type="text" name="answer_booklet_serial" placeholder="Serial Number" />
+            </div>
+
+            <div class="form-group">
+              <label><i class="far fa-clock"></i> Date &amp; Time of Incident</label>
+              <input type="datetime-local" name="incident_datetime" required />
+            </div>
+
+            <!-- Unfair Means -->
+            <div class="form-group full-width">
+              <label><i class="fas fa-exclamation-triangle"></i> Unfair Means Type (Select all that apply)</label>
+              <select name="unfair_means" multiple>
+                <option value="device usage">Digital Device usage (Mobile/Smart Watch/Pods)</option>
+                <option value="paper chits">Paper chit(s) usage</option>
+                <option value="mobile outside hall">Mobile usage outside exam hall</option>
+                <option value="writing in scan">Writing during scan &amp; upload</option>
+                <option value="browser navigation">Browser navigation violation</option>
+                <option value="unruly behaviour">Unruly behaviour at centre</option>
+                <option value="bio breaks">Excessive Bio breaks</option>
+                <option value="talking">Talking to student(s)</option>
+                <option value="text on body">Text on body/desk/clothes</option>
+                <option value="copying">Copying from others</option>
+                <option value="impersonation">Impersonation detected</option>
+                <option value="browsing exceeded">Browsing Tolerance Exceeded</option>
+                <option value="abusive language">Abusive Language usage</option>
+                <option value="other">Other (specify below)</option>
+              </select>
+            </div>
+
+            <!-- Details -->
+            <div class="form-group full-width">
+              <label><i class="fas fa-align-left"></i> Incident Description</label>
+              <textarea name="incident_details" rows="4" placeholder="Describe the incident in detail..."
+                required></textarea>
+            </div>
+
+            <!-- Officials -->
+            <div class="form-group">
+              <label><i class="fas fa-user-tie"></i> BITS Observer</label>
+              <input type="text" name="observer_name" placeholder="Observer Name" />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-mobile-alt"></i> Observer Mobile</label>
+              <input type="tel" name="observer_mobile" pattern="[0-9]{10}" placeholder="10-digit number" />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-user-check"></i> Invigilator</label>
+              <input type="text" name="invigilator_name" placeholder="Invigilator Name" />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-phone"></i> Invigilator Mobile</label>
+              <input type="tel" name="invigilator_mobile" pattern="[0-9]{10}" placeholder="10-digit number" />
+            </div>
+
+            <!-- Evidence Checkbox -->
+            <div class="form-group full-width">
+              <label class="checkbox">
+                <input type="checkbox" name="evidence_collected" />
+                <span><i class="fas fa-camera"></i> Evidence Collected &amp; Attached</span>
+              </label>
+            </div>
+
+            <!-- Submission -->
+            <div class="form-group full-width">
+              <label><i class="fas fa-calendar-check"></i> Internal Report Date</label>
+              <input type="date" name="report_date" />
+            </div>
+          </div>
+
+          <button type="submit" style="margin-top: 12px;">
+            <i class="fas fa-paper-plane"></i> Submit Incident Report
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="./form_submit.js"></script>
+  <script>
+    // Hamburger drawer logic (same as dashboard)
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const closeDrawerBtn = document.getElementById('close-drawer-btn');
+    const sideDrawer = document.getElementById('side-drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+
+    function openDrawer() {
+      sideDrawer.classList.add('open');
+      drawerOverlay.classList.add('visible');
+    }
+    function closeDrawer() {
+      sideDrawer.classList.remove('open');
+      drawerOverlay.classList.remove('visible');
+    }
+
+    hamburgerBtn.addEventListener('click', openDrawer);
+    closeDrawerBtn.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+cat > templates/index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sentiment Analyzer</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+    textarea { width: 100%; height: 120px; margin: 10px 0; padding: 10px; }
+    button { padding: 10px 20px; font-size: 16px; }
+    #result { margin-top: 20px; font-size: 18px; font-weight: bold; }
+    .positive { color: green; }
+    .negative { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Text Sentiment Analysis</h1>
+  <form id="sentiment-form">
+    <textarea name="text" placeholder="Type your text here..." required></textarea><br/>
+    <button type="submit">Analyze Sentiment</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById("sentiment-form").onsubmit = async (e) => {
+      e.preventDefault();
+      const text = e.target.text.value;
+      const response = await fetch("/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      const data = await response.json();
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `Sentiment: <span class="${data.sentiment.toLowerCase()}">${data.sentiment}</span> 
+                             (Confidence: ${(data.confidence * 100).toFixed(1)}%)`;
+    };
+  </script>
+</body>
+</html>
+EOF

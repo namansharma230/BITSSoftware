@@ -1,0 +1,20 @@
+# Python environments
+venv/
+env/
+fresh_env/
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
+# Database (local only)
+*.db
+
+# Logs
+*.log

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unfair Means Reports Dashboard</title>
+  <link rel="stylesheet" href="./style.css?v=1.0.1">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <!-- Login Form -->
+  <div class="login-container" id="login-container">
+    <h2>Dashboard Login</h2>
+    <div class="login-error" id="login-error"></div>
+    <form class="login-form" id="login-form">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container" id="dashboard-container">
+    <div class="dashboard-header">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="hamburger-btn" class="hamburger-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div>
+          <h1 class="gradient-text"><i class="fas fa-chart-line"></i> Unfair Means Analytics</h1>
+          <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #94a3b8;">BITS Pilani Examination Surveillance</p>
+        </div>
+      </div>
+      <!-- Original user-info removed, moved to drawer -->
+    </div>
+
+    <!-- Side Drawer -->
+    <div id="side-drawer" class="side-drawer">
+      <div class="drawer-header">
+        <button id="close-drawer-btn" class="close-btn"><i class="fas fa-times"></i></button>
+        <div class="drawer-user">
+          <i class="fas fa-user-circle fa-2x"></i>
+          <span id="user-name-drawer">Administrator</span>
+        </div>
+      </div>
+      <div class="drawer-content">
+        <button class="drawer-item" id="smoke-btn">
+          <i class="fas fa-vial"></i> Run Smoke Test
+        </button>
+        <button class="drawer-item logout" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+
+    <div class="container dashboard-content">
+      <div class="tab-header">
+        <div class="tab-nav">
+          <button class="tab-btn active" data-tab="overview"><i class="fas fa-home"></i> Overview</button>
+          <button class="tab-btn" data-tab="reports"><i class="fas fa-list"></i> Reports</button>
+          <button class="tab-btn" data-tab="analytics"><i class="fas fa-brain"></i> Analytics</button>
+        </div>
+        <a href="Index.html" class="tab-btn new-report-btn">
+          <i class="fas fa-plus"></i> New Report
+        </a>
+      </div>
+
+      <div id="smoke-status" style="margin-bottom: 20px; font-size: 0.85rem; font-weight: 500;"></div>
+
+      <!-- Overview Tab -->
+      <div id="overview" class="tab-content active">
+        <!-- Filter Section -->
+        <div id="filter-container"></div>
+
+        <div class="stat-grid">
+          <div class="glass-card stat-card">
+            <h3>Total Reports</h3>
+            <div class="value" id="total-reports">0</div>
+          </div>
+          <div class="glass-card stat-card">
+            <h3>Monthly Count</h3>
+            <div class="value" id="monthly-reports">0</div>
+          </div>
+          <div class="glass-card stat-card">
+            <h3>Evidence Rate</h3>
+            <div class="value" id="evidence-collected">0%</div>
+          </div>
+          <div class="glass-card stat-card">
+            <h3>Top Violation</h3>
+            <div class="value" id="common-violation" style="font-size: 1.25rem;">-</div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <div class="glass-card">
+            <h3 class="card-title"><i class="fas fa-chart-bar"></i> Violation Distribution</h3>
+            <div class="canvas-wrapper"><canvas id="unfair-means-pie-chart"></canvas></div>
+          </div>
+          <div class="glass-card">
+            <h3 class="card-title"><i class="fas fa-chart-area"></i> Monthly Trend</h3>
+            <div class="canvas-wrapper"><canvas id="city-chart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <div class="glass-card full-width">
+            <h3 class="card-title"><i class="fas fa-history"></i> Recent Incidents</h3>
+            <div class="table-wrapper">
+              <table class="table-glass" id="recent-reports-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Violation</th>
+                  </tr>
+                </thead>
+                <tbody id="reports-table-body">
+                  <!-- Data populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- All Reports Tab -->
+      <div id="reports" class="tab-content">
+        <div class="glass-card" style="padding: 24px; margin-bottom: 24px;">
+          <h3 style="margin-top: 0; font-size: 1.1rem; border: none; padding: 0;"><i class="fas fa-filter"></i> Search &
+            Filter</h3>
+          <div class="form-grid" style="margin-top: 20px;">
+            <div class="form-group">
+              <label><i class="fas fa-graduation-cap"></i> Course</label>
+              <select id="filter-course">
+                <option value="">All Courses</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-exclamation-circle"></i> Unfair Means</label>
+              <select id="filter-unfair-means">
+                <option value="">All Types</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="far fa-calendar-alt"></i> From Date</label>
+              <input type="date" id="filter-date-from">
+            </div>
+            <div class="form-group">
+              <label><i class="far fa-calendar-check"></i> To Date</label>
+              <input type="date" id="filter-date-to">
+            </div>
+            <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+              <button id="apply-filters-reports" style="flex: 2; height: 46px;">
+                <i class="fas fa-search"></i> Apply
+              </button>
+              <button id="export-btn" class="export-btn" style="flex: 1; height: 46px; background: var(--success);">
+                <i class="fas fa-file-export"></i> CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding: 24px; overflow-x: auto;">
+          <table class="table-glass" id="all-reports-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Student</th>
+                <th>BITS ID</th>
+                <th>Code</th>
+                <th>Course</th>
+                <th>Violation</th>
+                <th>Evid.</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="all-reports-table-body">
+              <!-- Data populated by JS -->
+            </tbody>
+          </table>
+          <div class="pagination" id="reports-pagination" style="margin-top: 24px;">
+            <!-- Pagination buttons -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div id="analytics" class="tab-content">
+        <div class="chart-container">
+          <div class="glass-card">
+            <h3 class="card-title"><i class="fas fa-chart-pie"></i> Means Distribution</h3>
+            <div class="canvas-wrapper"><canvas id="unfair-means-pie-chart-analytics"></canvas></div>
+          </div>
+          <div class="glass-card">
+            <h3 class="card-title"><i class="fas fa-map-marked-alt"></i> Reports by City</h3>
+            <div class="canvas-wrapper"><canvas id="city-chart-analytics"></canvas></div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <div class="glass-card">
+            <h3 class="card-title"><i class="fas fa-layer-group"></i> Reports by Semester</h3>
+            <div class="canvas-wrapper"><canvas id="semester-chart-analytics"></canvas></div>
+          </div>
+          <div class="glass-card">
+            <h3 class="card-title"><i class="fas fa-camera-retro"></i> Evidence Rate Analytics</h3>
+            <div class="canvas-wrapper"><canvas id="evidence-chart-analytics"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="./mock-api.js"></script>
+  <script src="./dashboard.js?v=1.0.1"></script>
+</body>
+
+</html>
