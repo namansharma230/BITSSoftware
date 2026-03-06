@@ -1,5 +1,6 @@
 [build]
-  publish = "Frontend"
+  base = "Frontend"
+  publish = "."
 
 # Handle client-side routing — serve Index.html for all unknown paths
 [[redirects]]
